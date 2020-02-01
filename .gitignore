@@ -35,8 +35,6 @@
 .vs/
 Debug/
 Release/
-TicTacToeCore/Debug/
-TicTacToeCore/Release/
 x64/
 *.suo
 *.log
