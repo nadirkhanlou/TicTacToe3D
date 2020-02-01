@@ -57,8 +57,6 @@ x64/
 *.lock
 *.json
 *.metagen
-*.vcxproj.filters
-*.vcxproj.user
 *.txt
 *.iobj
 *.ipdb
