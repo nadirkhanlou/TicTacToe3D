@@ -27,6 +27,12 @@ namespace TicTacToe {
 		other._gameBoard = nullptr;
 	}
 
+	TicTacToeState::TicTacToeState(char* gameBoard, unsigned int size)
+		: _n(size), _lastFill(-1)
+	{
+		_gameBoard = gameBoard;
+	}
+
 	TicTacToeState& TicTacToeState::operator=(const TicTacToeState& other)
 	{
 		this->_n = other._n;
