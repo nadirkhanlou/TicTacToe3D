@@ -54,6 +54,11 @@ namespace TicTacToe {
 		other._gameBoard = nullptr;
 	}
 
+	TicTacToeState::~TicTacToeState()
+	{
+		delete[] this->_gameBoard;
+	}
+
 	char TicTacToeState::Get(unsigned int idx)
 	{
 		if (idx >= _n * _n * _n)
@@ -66,6 +71,42 @@ namespace TicTacToe {
 	char TicTacToeState::Get(unsigned int i, unsigned int j, unsigned int k)
 	{
 		return Get(i * _n * _n + j * _n + k);
+	}
+
+	bool TicTacToeState::IsBlank(unsigned int index)
+	{
+		if (index >= _n * _n * _n)
+		{
+			return false;
+		}
+		return _gameBoard[index] == '-';
+	}
+
+	void TicTacToeState::FillX(unsigned int index)
+	{
+		if (index >= _n * _n * _n)
+		{
+			return;
+		}
+		_gameBoard[index] = 'X';
+	}
+
+	void TicTacToeState::FillO(unsigned int index)
+	{
+		if (index >= _n * _n * _n)
+		{
+			return;
+		}
+		_gameBoard[index] = 'O';
+	}
+
+	void TicTacToeState::Unfill(unsigned int index)
+	{
+		if (index >= _n * _n * _n)
+		{
+			return;
+		}
+		_gameBoard[index] = '-';
 	}
 
 	void TicTacToeState::Print()

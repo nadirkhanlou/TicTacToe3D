@@ -22,6 +22,13 @@ namespace TicTacToe {
 
 		char Get(unsigned int idx);
 		char Get(unsigned int i, unsigned int j, unsigned int k);
+		int GetLastFill() const { return _lastFill; }
+		unsigned int GetSize() const { return _n; }
+		bool IsBlank(unsigned int index);
+		void FillX(unsigned int index);
+		void FillO(unsigned int index);
+		void Unfill(unsigned int index);
+
 		void Print();
 	}; // class TicTacToeState
 } // namespace TicTacToe
