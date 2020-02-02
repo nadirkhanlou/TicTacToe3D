@@ -27,8 +27,8 @@ namespace TicTacToe {
 		other._gameBoard = nullptr;
 	}
 
-	TicTacToeState::TicTacToeState(char* gameBoard, unsigned int size)
-		: _n(size), _lastFill(-1)
+	TicTacToeState::TicTacToeState(char* gameBoard, unsigned int size, int lastFill)
+		:_n(size), _lastFill(lastFill)
 	{
 		_gameBoard = gameBoard;
 	}

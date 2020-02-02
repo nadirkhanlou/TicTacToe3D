@@ -11,12 +11,12 @@ namespace TicTacToe {
 		char* _gameBoard;
 		int _lastFill;
 
-		~TicTacToeState();
 	public:
 		TicTacToeState(unsigned int size);
 		TicTacToeState(const TicTacToeState& other);
 		TicTacToeState(TicTacToeState&& other);
-		TicTacToeState(char* gameBoard, unsigned int size);
+		TicTacToeState(char* gameBoard, unsigned int size, int lastFill);
+		~TicTacToeState();
 		TicTacToeState& operator=(const TicTacToeState& other);
 		TicTacToeState& operator=(TicTacToeState&& other);
 
