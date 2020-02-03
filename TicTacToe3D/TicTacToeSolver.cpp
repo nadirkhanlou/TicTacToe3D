@@ -13,6 +13,197 @@ namespace TicTacToe {
 		return static_cast<int>(std::distance(vec.begin(), min_element(vec.begin(), vec.end())));
 	}
 
+	int TicTacToe::TicTacToeSolver::HighetWinningPotentialHeuristic(State& state, bool isXTurn)
+	{
+		int size = state.GetSize();
+		bool* checked = new bool[size];
+		
+		for (int i = 0; i < size * size; ++i) {
+			checked[i] = false;
+		}
+		for (int i = 0; i < size * size; ++i) {
+			if (!checked[i]) {
+
+				
+			}
+		}
+		return 0;
+	}
+
+	bool TicTacToeSolver::TerminalCheck(State& state)
+	{
+		int size = state.GetSize();
+
+		int indx = state.GetLastFill();
+		char lastFill = state.Get(indx);
+
+		bool isTerminal = true;
+		int j = indx - (indx % size);
+		for (j; j < size * size; j += 1) {
+			if (state.Get(j) != lastFill) {
+				isTerminal = false;
+				break;
+			}
+		}
+
+		if (isTerminal)
+			return true;
+		isTerminal = true;
+		j = indx - (((indx / size) % size) * size);
+		for (j; j < size * size; j += size) {
+			if (state.Get(j) != lastFill) {
+				isTerminal = false;
+				break;
+			}
+		}
+
+		if (isTerminal)
+			return true;
+		isTerminal = true;
+		j = indx % (size * size);
+		for (j; j < size * size; j += size * size) {
+			if (state.Get(j) != lastFill) {
+				isTerminal = false;
+				break;
+			}
+		}
+
+		if ((indx % (size * size)) % (size + 1) == 0) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = indx - (indx % (size * size));
+			for (j; j < size * size; j += size + 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if ((indx % (size * size)) % (size - 1) == 0) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = indx - (indx % (size * size));
+			for (j; j < size * size; j += size - 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == (indx % (size * size) / size)) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = indx % size;
+			for (j; j < size * size; j += size * size + size) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == (size - (indx % (size * size)) / size)) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = (size * size) - (size - (indx % size) - 1);
+			for (j; j < size * size; j += size * size - size) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == (indx % size)) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = ((indx % (size * size)) / size) * size;
+			for (j; j < size * size; j += size * size + 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == ((size - indx) % size)) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = ((indx % (size * size)) / size) * size + size - 1;
+			for (j; j < size * size; j += size * size - 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+
+		if (indx / (size * size) == indx % size && indx % size == (indx % (size * size)) / size) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = 0;
+			for (int j = 0; j < size * size; j += size * size + size + 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == indx % size && size - (indx % size) - 1 == (indx % (size * size)) / size) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = size - 1;
+			for (int j = 0; j < size * size; j += size * size + size - 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == size - (indx % size) - 1 && indx % size == (indx % (size * size)) / size) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = size * size - size;
+			for (int j = 0; j < size * size; j += size * size - size + 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (indx / (size * size) == size - (indx % size) - 1 && size - (indx % size) - 1 == (indx % (size * size)) / size) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			j = size * size - size;
+			for (int j = 0; j < size * size; j += size * size - size - 1) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if (isTerminal)
+			return true;
+		return false;
+	}
+
 	int TicTacToeSolver::Minimax(State& state, int action, bool isPlayerMax, int depth = INT32_MAX)
 	{
 		if (IsTerminal(state))
@@ -104,4 +295,5 @@ namespace TicTacToe {
 			return score;
 		}
 	}
+	
 } //namespace TicTacToe

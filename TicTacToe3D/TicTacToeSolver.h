@@ -19,6 +19,11 @@ namespace TicTacToe {
 
 		static bool IsTerminal(State& state);
 		static bool IsTerminal(State& state, int*& hint);
+		static int HighetWinningPotentialHeuristic(State& state, bool isXTurn);
+		static int LeastLosingPotentialHeuristic(State& state, bool isXTurn);
+		static int PotentialSubtractionHeuristic(State& state, bool isXTurn);
+		static int WinningPotentialCount(State& state, bool isXTurn, int indx);
+		static bool TerminalCheck(State& state);
 		int Utility(State& state, int* hint = nullptr);
 		int FindBestActionMinimax();
 		int FindBestActionAlphaBeta();

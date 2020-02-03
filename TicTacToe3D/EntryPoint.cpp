@@ -13,11 +13,11 @@ int main() {
 
 //If the configure type is .dll
 #ifndef CONSOLE_APP
-extern "C" __declspec(dllexport) int GetBestMoveMiniMax(char* gameBoard, int gameSize, int lastFill)
+extern "C" __declspec(dllexport) int GetBestMoveMinimax(char* gameBoard, int gameSize, int lastFill)
 {
     TicTacToeState state(gameBoard, gameSize, lastFill);
     TicTacToeSolver solver(state);
-    return solver.FindBestActionMiniMax();
+    return solver.FindBestActionMinimax();
 }
 extern "C" __declspec(dllexport) int GetBestMoveAlphaBeta(char* gameBoard, int gameSize, int lastFill)
 {
