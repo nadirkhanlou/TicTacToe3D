@@ -43,6 +43,7 @@ namespace TicTacToe {
 		{
 			this->_gameBoard[i] = other._gameBoard[i];
 		}
+		return *this;
 	}
 
 	TicTacToeState& TicTacToeState::operator=(TicTacToeState&& other)
@@ -52,6 +53,7 @@ namespace TicTacToe {
 		delete[] this->_gameBoard;
 		this->_gameBoard = other._gameBoard;
 		other._gameBoard = nullptr;
+		return *this;
 	}
 
 	TicTacToeState::~TicTacToeState()

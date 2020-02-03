@@ -1,12 +1,23 @@
 #include "TicTacToeSolver.h"
+#include <iostream>
 
-//#define CONSOLE_APP
+#define CONSOLE_APP
 
 using namespace TicTacToe;
 
 //If the configure type is .exe
 #ifdef CONSOLE_APP
 int main() {
+    //char* c = "---------------------------";
+    char* c = new char[28];
+    std::cin >> c;
+    TicTacToeState s(c, 3, -1);
+    s.Print();
+    //if (TicTacToeSolver::IsTerminal(s))
+    //    std::cout << "yes!\n";
+    TicTacToeSolver solver(s);
+    int a = solver.FindBestActionMinimax();
+    std::cout << a << "\n";
     return 0;
 }
 #endif // CONSOLE_APP
