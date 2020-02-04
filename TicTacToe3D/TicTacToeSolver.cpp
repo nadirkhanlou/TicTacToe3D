@@ -1,4 +1,5 @@
 #include "TicTacToeSolver.h"
+#include <math.h>
 
 namespace TicTacToe {
 
@@ -17,6 +18,7 @@ namespace TicTacToe {
 	{
 		_state = &state;
 		_isXTurn = _state->Get(_state->GetLastFill()) == 'O' ? true : false;
+		int size = state.GetSize();
 	}
 
 	TicTacToeSolver::~TicTacToeSolver()
@@ -34,7 +36,6 @@ namespace TicTacToe {
 		bool isTerminal = true;
 		int j = indx - (indx % size);
 		for (j; j < size * size * size && counter < size; j += 1, counter++) {
-			//std::cout << j << "-" << state.Get(j) << "\n";
 			if (state.Get(j) != lastFill) {
 				isTerminal = false;
 				break;
@@ -43,7 +44,6 @@ namespace TicTacToe {
 
 		if (isTerminal)
 			return true;
-		//std::cout << "test\n";
 		isTerminal = true;
 		counter = 0;
 		j = indx - (((indx / size) % size) * size);
@@ -218,18 +218,17 @@ namespace TicTacToe {
 	int TicTacToe::TicTacToeSolver::HighetWinningPotentialHeuristic(State& state, bool isXTurn)
 	{
 		int size = state.GetSize();
-		bool* checked = new bool[size];
-		
-		for (int i = 0; i < size * size; ++i) {
-			checked[i] = false;
-		}
-		for (int i = 0; i < size * size; ++i) {
-			if (!checked[i]) {
 
-				
-			}
+		char playerChar = isXTurn ? 'X' : 'O';
+		char opponentChar = isXTurn ? 'O' : 'X';
+
+		std::set<std::vector<int>> potentialSet = std::set<std::vector<int>>();
+		for (int i = 0; i < size * size * size ; ++i) {
+			if (state.Get(i) == playerChar)
+				WinningPotentialCount(state, i, opponentChar, potentialSet);
 		}
-		return 0;
+
+		return potentialSet.size();
 	}
 
 	int TicTacToeSolver::LeastLosingPotentialHeuristic(State& state, bool isXTurn)
@@ -242,9 +241,199 @@ namespace TicTacToe {
 		return 0;
 	}
 
-	int TicTacToeSolver::WinningPotentialCount(State& state, bool isXTurn, int indx)
+	int TicTacToeSolver::WinningPotentialCount(State& state, int indx, char opponentChar, std::set<std::vector<int>>& potentialSet)
 	{
-		return 0;
+		int size = state.GetSize();
+		int counter = 0;
+
+		bool opponentExists = false;
+		int j = indx - (indx % size);
+		std::vector<int> path = std::vector<int>();
+		for (j; j < size * size * size && counter < size; j += 1, counter++) {
+			if (state.Get(j) == opponentChar) {
+				opponentExists = true;
+			}
+			path.push_back(j);
+		}
+		if (!opponentExists)
+			potentialSet.emplace(path);
+
+		opponentExists = true;
+		counter = 0;
+		j = indx - (((indx / size) % size) * size);
+		path = std::vector<int>();
+		for (j; j < size * size * size && counter < size; j += size, counter++) {
+			if (state.Get(j) == opponentChar) {
+				opponentExists = true;
+			}
+			path.push_back(j);
+		}
+		if (!opponentExists)
+			potentialSet.emplace(path);
+
+		opponentExists = false;
+		counter = 0;
+		j = indx % (size * size);
+		path = std::vector<int>();
+		for (j; j < size * size * size && counter < size; j += size * size, counter++) {
+			if (state.Get(j) == opponentChar) {
+				opponentExists = true;
+			}
+			path.push_back(j);
+		}
+		if (!opponentExists)
+			potentialSet.emplace(path);
+
+		if ((indx % (size * size)) % (size + 1) == 0) {
+			opponentExists = false;
+			counter = 0;
+			path = std::vector<int>();
+			j = indx - (indx % (size * size));
+			for (j; j < size * size * size && counter < size; j += size + 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if ((indx % (size * size)) % (size - 1) == 0) {
+			opponentExists = false;
+			counter = 0;
+			path = std::vector<int>();
+			j = indx - (indx % (size * size));
+			for (j; j < size * size * size && counter < size; j += size - 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == (indx % (size * size) / size)) {
+			opponentExists = false;
+			counter = 0;
+			path = std::vector<int>();
+			j = indx % size;
+			for (j; j < size * size * size && counter < size; j += size * size + size, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == (size - (indx % (size * size)) / size)) {
+			opponentExists = false;
+			counter = 0;
+			path = std::vector<int>();
+			j = (size * size) - (size - (indx % size) - 1);
+			for (j; j < size * size * size && counter < size; j += size * size - size, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == (indx % size)) {
+			opponentExists = false;
+			counter = 0;
+			j = ((indx % (size * size)) / size) * size;
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size + 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == ((size - indx) % size)) {
+			opponentExists = false;
+			counter = 0;
+			j = ((indx % (size * size)) / size) * size + size - 1;
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size - 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+
+		if (indx / (size * size) == indx % size && indx % size == (indx % (size * size)) / size) {
+			opponentExists = false;
+			counter = 0;
+			j = 0;
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size + size + 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == indx % size && size - (indx % size) - 1 == (indx % (size * size)) / size) {
+			opponentExists = false;
+			counter = 0;
+			j = size - 1;
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size + size - 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == size - (indx % size) - 1 && indx % size == (indx % (size * size)) / size) {
+			opponentExists = false;
+			counter = 0;
+			j = size * size - size;
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size - size + 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx / (size * size) == size - (indx % size) - 1 && size - (indx % size) - 1 == (indx % (size * size)) / size) {
+			opponentExists = false;
+			counter = 0;
+			j = size * size - 1;
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size - size - 1, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
 	}
 
 	bool TicTacToeSolver::TerminalCheck(State& state)
@@ -263,11 +452,23 @@ namespace TicTacToe {
 		int n = _state->GetSize();
 		int max = INT_MIN;
 		int argMax = -1;
+		int depth = 2;
+		if (_state->GetBranchFactor() < 25)
+			depth = 3;
+		if (_state->GetBranchFactor() < 20)
+			depth = 4;
+		if (_state->GetBranchFactor() < 15)
+			depth = 5;
+		if (_state->GetBranchFactor() < 10)
+			depth = 7;
+		if (_state->GetBranchFactor() < 5)
+			depth = 10;
+		
 		for (unsigned int idx = 0; idx < n * n * n; ++idx)
 		{
 			if (_state->IsBlank(idx))
 			{
-				int res = Minimax(*_state, idx, false, 3);
+				int res = Minimax(*_state, idx, false, depth);
 				if (res > max) {
 					max = res;
 					argMax = idx;
@@ -284,18 +485,22 @@ namespace TicTacToe {
 
 	int TicTacToeSolver::Minimax(State& state, int action, bool isPlayerMax, int depth)
 	{
+
+		int prevLastFill = state.GetLastFill();
+		state.Get(state.GetLastFill()) == 'X' ? state.FillO(action) : state.FillX(action);
+		
+
 		if (IsTerminal(state))
 		{
-			state.Print();
-			return isPlayerMax ? -1 : +1;
+			state.Unfill(action, prevLastFill);
+			return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
 		}
 		if (depth < 0)
 		{
-			return 0;
+			state.Unfill(action, prevLastFill);
+			return (isPlayerMax ? -1 : 1) * HighetWinningPotentialHeuristic(state, _isXTurn);
 		}
 
-		if(action != -1)
-			state.Get(state.GetLastFill()) == 'X' ? state.FillO(action) : state.FillX(action);
 		unsigned int n = state.GetSize();
 		if (isPlayerMax)
 		{
@@ -309,7 +514,7 @@ namespace TicTacToe {
 						max = res;
 				}
 			}
-			state.Unfill(action);
+			state.Unfill(action, prevLastFill);
 			return max;
 		}
 		else
@@ -324,7 +529,7 @@ namespace TicTacToe {
 						min = res;
 				}
 			}
-			state.Unfill(action);
+			state.Unfill(action, prevLastFill);
 			return min;
 		}
 	}
@@ -340,6 +545,7 @@ namespace TicTacToe {
 			return Utility(state, isPlayerMax);
 		}
 
+		int prevLastFill = state.GetLastFill();
 		state.Get(state.GetLastFill()) == 'X' ? state.FillO(action) : state.FillX(action);
 		unsigned int n = state.GetSize();
 		if (isPlayerMax)
@@ -357,7 +563,7 @@ namespace TicTacToe {
 					alpha = std::max(alpha, score);
 				}
 			}
-			state.Unfill(action);
+			state.Unfill(action, prevLastFill);
 			return score;
 		}
 		else
@@ -375,9 +581,14 @@ namespace TicTacToe {
 					beta = std::min(beta, score);
 				}
 			}
-			state.Unfill(action);
+			state.Unfill(action, prevLastFill);
 			return score;
 		}
+	}
+
+	void TicTacToeSolver::SetTurn(bool isXTurn)
+	{
+		_isXTurn = isXTurn;
 	}
 	
 } //namespace TicTacToe

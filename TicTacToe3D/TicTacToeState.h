@@ -10,6 +10,7 @@ namespace TicTacToe {
 		unsigned int _n;
 		char* _gameBoard;
 		int _lastFill;
+		int _branchFactor;
 
 	public:
 		TicTacToeState(unsigned int size);
@@ -23,11 +24,12 @@ namespace TicTacToe {
 		char Get(unsigned int idx);
 		char Get(unsigned int i, unsigned int j, unsigned int k);
 		int GetLastFill() const { return _lastFill; }
+		int GetBranchFactor() const { return _branchFactor; }
 		unsigned int GetSize() const { return _n; }
 		bool IsBlank(unsigned int index);
 		void FillX(unsigned int index);
 		void FillO(unsigned int index);
-		void Unfill(unsigned int index);
+		void Unfill(unsigned int index, int prevLastFill);
 
 		void Print();
 	}; // class TicTacToeState

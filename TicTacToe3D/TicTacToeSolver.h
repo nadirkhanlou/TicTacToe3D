@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <set>
 
 #include "TicTacToeState.h"
 
@@ -22,14 +23,14 @@ namespace TicTacToe {
 		static int HighetWinningPotentialHeuristic(State& state, bool isXTurn);
 		static int LeastLosingPotentialHeuristic(State& state, bool isXTurn);
 		static int PotentialSubtractionHeuristic(State& state, bool isXTurn);
-		static int WinningPotentialCount(State& state, bool isXTurn, int indx);
+		static int WinningPotentialCount(State& state, int indx, char opponentChar, std::set<std::vector<int>>& potentialSet);
 		static bool TerminalCheck(State& state);
 		int Utility(State& state, bool isPlayerMax, int* hint = nullptr);
 		int FindBestActionMinimax();
 		int FindBestActionAlphaBeta();
 		int Minimax(State& state, int action, bool isPlayerMax, int depth = INT32_MAX);
 		int AlphaBeta(State& state, int action, bool isPlayerMax, int alpha, int beta, int depth = INT32_MAX);
-
+		void SetTurn(bool isXTurn);
 
 	}; // class TicTacToeSolver
 } // namespace TicTacToe

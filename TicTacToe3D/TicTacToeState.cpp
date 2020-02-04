@@ -1,7 +1,7 @@
 #include "TicTacToeState.h"
 
 namespace TicTacToe {
-	TicTacToeState::TicTacToeState(unsigned int size) : _n(size), _lastFill(-1)
+	TicTacToeState::TicTacToeState(unsigned int size) : _n(size), _lastFill(-1), _branchFactor(size * size * size)
 	{
 		this->_gameBoard = new char[_n * _n * _n];
 		for (unsigned int i = 0; i < _n * _n * _n; ++i)
@@ -18,10 +18,11 @@ namespace TicTacToe {
 		{
 			this->_gameBoard[i] = other._gameBoard[i];
 		}
+		_branchFactor = other._branchFactor;
 	}
 
 	TicTacToeState::TicTacToeState(TicTacToeState&& other)
-		: _n(other._n), _lastFill(other._lastFill)
+		: _n(other._n), _lastFill(other._lastFill), _branchFactor(other._branchFactor)
 	{
 		this->_gameBoard = other._gameBoard;
 		other._gameBoard = nullptr;
@@ -31,12 +32,17 @@ namespace TicTacToe {
 		:_n(size), _lastFill(lastFill)
 	{
 		_gameBoard = gameBoard;
+		_branchFactor = 0;
+		for (int i = 0; i < size * size * size; ++i)
+			if (gameBoard[i] == '-')
+				_branchFactor++;
 	}
 
 	TicTacToeState& TicTacToeState::operator=(const TicTacToeState& other)
 	{
 		this->_n = other._n;
 		this->_lastFill = other._lastFill;
+		this->_branchFactor = other._branchFactor;
 		delete[] this->_gameBoard;
 		this->_gameBoard = new char[_n * _n * _n];
 		for (unsigned int i = 0; i < _n * _n * _n; ++i)
@@ -50,6 +56,7 @@ namespace TicTacToe {
 	{
 		this->_n = other._n;
 		this->_lastFill = other._lastFill;
+		this->_branchFactor = other._branchFactor;
 		delete[] this->_gameBoard;
 		this->_gameBoard = other._gameBoard;
 		other._gameBoard = nullptr;
@@ -91,6 +98,8 @@ namespace TicTacToe {
 			return;
 		}
 		_gameBoard[index] = 'X';
+		_lastFill = index;
+		_branchFactor--;
 	}
 
 	void TicTacToeState::FillO(unsigned int index)
@@ -100,15 +109,19 @@ namespace TicTacToe {
 			return;
 		}
 		_gameBoard[index] = 'O';
+		_lastFill = index;
+		_branchFactor--;
 	}
 
-	void TicTacToeState::Unfill(unsigned int index)
+	void TicTacToeState::Unfill(unsigned int index, int prevLastFill)
 	{
 		if (index >= _n * _n * _n)
 		{
 			return;
 		}
 		_gameBoard[index] = '-';
+		_lastFill = prevLastFill;
+		_branchFactor++;
 	}
 
 	void TicTacToeState::Print()

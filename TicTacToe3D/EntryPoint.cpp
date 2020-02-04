@@ -8,16 +8,39 @@ using namespace TicTacToe;
 //If the configure type is .exe
 #ifdef CONSOLE_APP
 int main() {
-    //char* c = "---------------------------";
-    char* c = new char[28];
-    std::cin >> c;
-    TicTacToeState s(c, 3, -1);
+    //char* c = "OOO------------------------";
+    int size = 3;
+    char* c = new char[size * size * size];
+    for (int i = 0; i < size * size * size; ++i) {
+        c[i] = '-';
+    }
+    TicTacToeState s(c, size, -1);
+
+    /*std::cin >> c;
     s.Print();
-    //if (TicTacToeSolver::IsTerminal(s))
-    //    std::cout << "yes!\n";
+    if (TicTacToeSolver::IsTerminal(s))
+        std::cout << "yes!\n";
+    return 0;*/
+
     TicTacToeSolver solver(s);
-    int a = solver.FindBestActionMinimax();
-    std::cout << a << "\n";
+    
+    bool terminated = false;
+    bool isXTurn = false;
+    while (!terminated) {
+        s.Print();
+        std::cout << "\n";
+        solver.SetTurn(isXTurn);
+        int a = solver.FindBestActionMinimax();
+        isXTurn ? s.FillX(a) : s.FillO(a);
+        std::cout << "action = " << a << "\n";
+        isXTurn = !isXTurn;
+        std::cout << "\n";
+        if (TicTacToeSolver::IsTerminal(s)) {
+            terminated = true;
+        }
+            
+    }
+    s.Print();
     return 0;
 }
 #endif // CONSOLE_APP
