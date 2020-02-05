@@ -28,7 +28,7 @@ namespace TicTacToe {
 		int Utility(State& state, bool isPlayerMax, int* hint = nullptr);
 		int FindBestActionMinimax();
 		int FindBestActionAlphaBeta();
-		int Minimax(State& state, int action, bool isPlayerMax, int depth = INT32_MAX);
+		int Minimax(State& state, int action, bool isPlayerMax, int depth = INT32_MAX, bool debugPar = false);
 		int AlphaBeta(State& state, int action, bool isPlayerMax, int alpha, int beta, int depth = INT32_MAX);
 		void SetTurn(bool isXTurn);
 

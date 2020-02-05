@@ -1,7 +1,8 @@
 #include "TicTacToeSolver.h"
 #include <iostream>
+#include <fstream>
 
-#define CONSOLE_APP
+//#define CONSOLE_APP
 
 using namespace TicTacToe;
 
@@ -47,20 +48,31 @@ int main() {
 
 //If the configure type is .dll
 #ifndef CONSOLE_APP
-extern "C" __declspec(dllexport) int GetBestMoveMinimax(char* gameBoard, int gameSize, int lastFill)
+extern "C" __declspec(dllexport) bool test(char gameBoard[]) {
+    return gameBoard[0] == '-';
+}
+extern "C" __declspec(dllexport) int GetBestMoveMinimax(char gameBoard[], int gameSize, int lastFill)
 {
     TicTacToeState state(gameBoard, gameSize, lastFill);
     TicTacToeSolver solver(state);
+    solver.SetTurn(state.GetLastFill() != 'X');
     return solver.FindBestActionMinimax();
 }
-extern "C" __declspec(dllexport) int GetBestMoveAlphaBeta(char* gameBoard, int gameSize, int lastFill)
+extern "C" __declspec(dllexport) int GetBestMoveAlphaBeta(char gameBoard[], int gameSize, int lastFill)
 {
     TicTacToeState state(gameBoard, gameSize, lastFill);
     TicTacToeSolver solver(state);
     return solver.FindBestActionAlphaBeta();
 }
-extern "C" __declspec(dllexport) bool IsTerminal(char* gameBoard, int gameSize, int lastFill)
+extern "C" __declspec(dllexport) bool IsTerminal(char gameBoard[], int gameSize, int lastFill)
 {
+    std::ofstream out;
+    out.open("out.txt");
+    for (int i = 0; i < gameSize * gameSize * gameSize; ++i) {
+        out << gameBoard[i];
+    }
+    out << "\n" << lastFill << "\n";
+    out.close();
     TicTacToeState state(gameBoard, gameSize, lastFill);
     return TicTacToeSolver::IsTerminal(state);
 }

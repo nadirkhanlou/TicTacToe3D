@@ -468,13 +468,15 @@ namespace TicTacToe {
 		{
 			if (_state->IsBlank(idx))
 			{
-				int res = Minimax(*_state, idx, false, depth);
+				int res = Minimax(*_state, idx, false, depth, true);
+				std::cout << idx << " " << res << "\n";
 				if (res > max) {
 					max = res;
 					argMax = idx;
 				}
 			}
 		}
+		std::cout << "max = "<< max << "\n";
 		return argMax;
 	}
 
@@ -483,22 +485,39 @@ namespace TicTacToe {
 		return 0;
 	}
 
-	int TicTacToeSolver::Minimax(State& state, int action, bool isPlayerMax, int depth)
+	int TicTacToeSolver::Minimax(State& state, int action, bool isPlayerMax, int depth, bool debugPar)
 	{
-
 		int prevLastFill = state.GetLastFill();
-		state.Get(state.GetLastFill()) == 'X' ? state.FillO(action) : state.FillX(action);
-		
+		//char lastFill = state.Get(state.GetLastFill());
+		if(prevLastFill != -1)
+			state.Get(prevLastFill) == 'X' ? state.FillO(action) : state.FillX(action);
+		else
+			_isXTurn ? state.FillX(action) : state.FillO(action);
 
 		if (IsTerminal(state))
 		{
+			/*if (state.Get(3) == 'O' && state.Get(13) == 'O' && state.Get(23) == 'X' && state.Get(11) == 'X') {
+				std::cout << "\n";
+				state.Print();
+			}*/
+
+			/*if (debugPar) {
+				std::cout << "\n";
+				state.Print();
+				std::cout << "\n";
+			}*/
 			state.Unfill(action, prevLastFill);
+			//return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
 			return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
 		}
+
 		if (depth < 0)
 		{
+			//state.Unfill(action, prevLastFill);
+			int h1 = HighetWinningPotentialHeuristic(state, _isXTurn);
+			int h2 = HighetWinningPotentialHeuristic(state, !_isXTurn);
 			state.Unfill(action, prevLastFill);
-			return (isPlayerMax ? -1 : 1) * HighetWinningPotentialHeuristic(state, _isXTurn);
+			return isPlayerMax ? h2 - h1 : h1 - h2;
 		}
 
 		unsigned int n = state.GetSize();
@@ -509,7 +528,7 @@ namespace TicTacToe {
 			{
 				if (state.IsBlank(idx))
 				{
-					int res = Minimax(state, idx, !isPlayerMax, depth - 1);
+					int res = Minimax(state, idx, false, depth - 1, false);
 					if (res > max)
 						max = res;
 				}
@@ -524,7 +543,7 @@ namespace TicTacToe {
 			{
 				if (state.IsBlank(idx))
 				{
-					int res = Minimax(state, idx, !isPlayerMax, depth - 1);
+					int res = Minimax(state, idx, true, depth - 1, debugPar);
 					if (res < min)
 						min = res;
 				}
