@@ -29,7 +29,7 @@ namespace TicTacToe {
 		int FindBestActionMinimax();
 		int FindBestActionAlphaBeta();
 		int Minimax(State& state, int action, bool isPlayerMax, int depth = INT32_MAX, bool debugPar = false);
-		int AlphaBeta(State& state, int action, bool isPlayerMax, int alpha, int beta, int depth = INT32_MAX);
+		int AlphaBeta(State& state, int action, bool isPlayerMax, int alpha = INT32_MIN, int beta = INT32_MAX, int depth = INT32_MAX);
 		void SetTurn(bool isXTurn);
 
 	}; // class TicTacToeSolver

@@ -482,7 +482,34 @@ namespace TicTacToe {
 
 	int TicTacToeSolver::FindBestActionAlphaBeta()
 	{
-		return 0;
+		int n = _state->GetSize();
+		int max = INT_MIN;
+		int argMax = -1;
+		int depth = 2;
+		if (_state->GetBranchFactor() < 25)
+			depth = 3;
+		if (_state->GetBranchFactor() < 20)
+			depth = 4;
+		if (_state->GetBranchFactor() < 15)
+			depth = 5;
+		if (_state->GetBranchFactor() < 10)
+			depth = 7;
+		if (_state->GetBranchFactor() < 5)
+			depth = 10;
+
+		for (unsigned int idx = 0; idx < n * n * n; ++idx)
+		{
+			if (_state->IsBlank(idx))
+			{
+				int res = AlphaBeta(*_state, idx, false, depth);
+				if (res > max) {
+					max = res;
+					argMax = idx;
+				}
+			}
+		}
+		std::cout << "max = " << max << "\n";
+		return argMax;
 	}
 
 	int TicTacToeSolver::Minimax(State& state, int action, bool isPlayerMax, int depth, bool debugPar)
@@ -555,17 +582,28 @@ namespace TicTacToe {
 
 	int TicTacToeSolver::AlphaBeta(State& state, int action, bool isPlayerMax, int depth, int alpha, int beta)
 	{
+		int prevLastFill = state.GetLastFill();
+		
+
+		if (prevLastFill != -1)
+			state.Get(prevLastFill) == 'X' ? state.FillO(action) : state.FillX(action);
+		else
+			_isXTurn ? state.FillX(action) : state.FillO(action);
+
 		if (IsTerminal(state))
 		{
-			return Utility(state, isPlayerMax);
-		}
-		if (depth < 0)
-		{
-			return Utility(state, isPlayerMax);
+			state.Unfill(action, prevLastFill);
+			return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
 		}
 
-		int prevLastFill = state.GetLastFill();
-		state.Get(state.GetLastFill()) == 'X' ? state.FillO(action) : state.FillX(action);
+		if (depth < 0)
+		{
+			int h1 = HighetWinningPotentialHeuristic(state, _isXTurn);
+			int h2 = HighetWinningPotentialHeuristic(state, !_isXTurn);
+			state.Unfill(action, prevLastFill);
+			return isPlayerMax ? h2 - h1 : h1 - h2;
+		}
+
 		unsigned int n = state.GetSize();
 		if (isPlayerMax)
 		{
@@ -577,6 +615,7 @@ namespace TicTacToe {
 					score = std::max(score, AlphaBeta(state, idx, !isPlayerMax, depth - 1, alpha, beta));
 					if (score >= beta)
 					{
+						state.Unfill(action, prevLastFill);
 						return score;
 					}
 					alpha = std::max(alpha, score);
@@ -595,6 +634,7 @@ namespace TicTacToe {
 					score = std::min(score, AlphaBeta(state, idx, !isPlayerMax, depth - 1, alpha, beta));
 					if (score <= alpha)
 					{
+						state.Unfill(action, prevLastFill);
 						return score;
 					}
 					beta = std::min(beta, score);
