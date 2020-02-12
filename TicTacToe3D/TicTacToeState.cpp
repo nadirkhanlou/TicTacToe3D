@@ -127,6 +127,7 @@ namespace TicTacToe {
 	void TicTacToeState::Print()
 	{
 		std::ostream_iterator<char> outIt(std::cout, " ");
+		std::cout << "(" << _lastFill / (_n * _n) << ", " << _lastFill % (_n * _n) << ")\n";
 		for (unsigned int j = 0; j < _n; ++j)
 		{
 			for (unsigned int i = 0; i < _n; i++)
@@ -136,6 +137,9 @@ namespace TicTacToe {
 			}
 			std::cout << '\n';
 		}
+		for (unsigned int j = 0; j < _n * _n * _n; ++j)
+			std::cout << _gameBoard[j];
+		std::cout << '\n';
 	}
 
 } // namespace TicTacToe

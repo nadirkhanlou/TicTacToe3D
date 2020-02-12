@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <chrono>
 
 #include "TicTacToeState.h"
 
@@ -14,7 +15,11 @@ namespace TicTacToe {
 	private:
 		State* _state;
 		bool _isXTurn;
+		std::chrono::steady_clock::time_point _time0;
+		
+		
 	public:
+		int nodesExpanded = 0;
 		TicTacToeSolver(State& state);
 		~TicTacToeSolver();
 

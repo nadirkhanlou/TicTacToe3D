@@ -44,6 +44,7 @@ namespace TicTacToe {
 
 		if (isTerminal)
 			return true;
+		//std::cout << "1\n";
 		isTerminal = true;
 		counter = 0;
 		j = indx - (((indx / size) % size) * size);
@@ -56,6 +57,7 @@ namespace TicTacToe {
 
 		if (isTerminal)
 			return true;
+		//std::cout << "2\n";
 		isTerminal = true;
 		counter = 0;
 		j = indx % (size * size);
@@ -66,9 +68,11 @@ namespace TicTacToe {
 			}
 		}
 
+		
 		if ((indx % (size * size)) % (size + 1) == 0) {
 			if (isTerminal)
 				return true;
+			//std::cout << "3\n";
 			isTerminal = true;
 			counter = 0;
 			j = indx - (indx % (size * size));
@@ -83,9 +87,10 @@ namespace TicTacToe {
 		if ((indx % (size * size)) % (size - 1) == 0) {
 			if (isTerminal)
 				return true;
+			//std::cout << "4\n";
 			isTerminal = true;
 			counter = 0;
-			j = indx - (indx % (size * size));
+			j = (indx - (indx % (size * size))) + size - 1;
 			for (j; j < size * size * size && counter < size; j += size - 1, counter++) {
 				if (state.Get(j) != lastFill) {
 					isTerminal = false;
@@ -97,6 +102,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == (indx % (size * size) / size)) {
 			if (isTerminal)
 				return true;
+			//std::cout << "5\n";
 			isTerminal = true;
 			counter = 0;
 			j = indx % size;
@@ -111,6 +117,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == (size - (indx % (size * size)) / size)) {
 			if (isTerminal)
 				return true;
+			//std::cout << "6\n";
 			isTerminal = true;
 			counter = 0;
 			j = (size * size) - (size - (indx % size) - 1);
@@ -125,6 +132,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == (indx % size)) {
 			if (isTerminal)
 				return true;
+			//std::cout << "7\n";
 			isTerminal = true;
 			counter = 0;
 			j = ((indx % (size * size)) / size) * size;
@@ -139,6 +147,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == ((size - indx) % size)) {
 			if (isTerminal)
 				return true;
+			//std::cout << "8\n";
 			isTerminal = true;
 			counter = 0;
 			j = ((indx % (size * size)) / size) * size + size - 1;
@@ -154,6 +163,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == indx % size && indx % size == (indx % (size * size)) / size) {
 			if (isTerminal)
 				return true;
+			//std::cout << "9\n";
 			isTerminal = true;
 			counter = 0;
 			j = 0;
@@ -168,6 +178,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == indx % size && size - (indx % size) - 1 == (indx % (size * size)) / size) {
 			if (isTerminal)
 				return true;
+			//std::cout << "10\n";
 			isTerminal = true;
 			counter = 0;
 			j = size - 1;
@@ -182,6 +193,7 @@ namespace TicTacToe {
 		if (indx / (size * size) == size - (indx % size) - 1 && indx % size == (indx % (size * size)) / size) {
 			if (isTerminal)
 				return true;
+			//std::cout << "11\n";
 			isTerminal = true;
 			counter = 0;
 			j = size * size - size;
@@ -196,10 +208,26 @@ namespace TicTacToe {
 		if (indx / (size * size) == size - (indx % size) - 1 && size - (indx % size) - 1 == (indx % (size * size)) / size) {
 			if (isTerminal)
 				return true;
+			//std::cout << "12\n";
 			isTerminal = true;
 			counter = 0;
 			j = size * size - 1;
 			for (j; j < size * size * size && counter < size; j += size * size - size - 1, counter++) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
+		if ((size - 1 - (indx / (size * size))) == (indx % (size * size)) / size) {
+			if (isTerminal)
+				return true;
+			//std::cout << "12\n";
+			isTerminal = true;
+			counter = 0;
+			j = size * size - (size - (indx % size));
+			for (j; j < size * size * size && counter < size; j += size * size - size, counter++) {
 				if (state.Get(j) != lastFill) {
 					isTerminal = false;
 					break;
@@ -303,7 +331,7 @@ namespace TicTacToe {
 			opponentExists = false;
 			counter = 0;
 			path = std::vector<int>();
-			j = indx - (indx % (size * size));
+			j = (indx - (indx % (size * size))) + size - 1;
 			for (j; j < size * size * size && counter < size; j += size - 1, counter++) {
 				if (state.Get(j) == opponentChar) {
 					opponentExists = true;
@@ -434,6 +462,21 @@ namespace TicTacToe {
 			if (!opponentExists)
 				potentialSet.emplace(path);
 		}
+		
+		if ((size - 1 - (indx / (size * size))) == (indx % (size * size)) / size) {
+			opponentExists = false;
+			counter = 0;
+			j = size * size - (size - (indx % size));
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size - size, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
 	}
 
 	bool TicTacToeSolver::TerminalCheck(State& state)
@@ -448,14 +491,17 @@ namespace TicTacToe {
 	}
 
 	int TicTacToeSolver::FindBestActionMinimax()
-	{
+	{	
+		_time0 = std::chrono::high_resolution_clock::now();
 		int n = _state->GetSize();
-		int max = INT_MIN;
+		int max = INT32_MIN;
 		int argMax = -1;
-		int depth = 2;
-		if (_state->GetBranchFactor() < 25)
+		int depth = 1;
+		if (_state->GetBranchFactor() < 32)
+			depth = 2;
+		if (_state->GetBranchFactor() < 23)
 			depth = 3;
-		if (_state->GetBranchFactor() < 20)
+		if (_state->GetBranchFactor() < 18)
 			depth = 4;
 		if (_state->GetBranchFactor() < 15)
 			depth = 5;
@@ -469,46 +515,54 @@ namespace TicTacToe {
 			if (_state->IsBlank(idx))
 			{
 				int res = Minimax(*_state, idx, false, depth, true);
-				std::cout << idx << " " << res << "\n";
+				//std::cout << idx << " " << res << "\n";
 				if (res > max) {
 					max = res;
 					argMax = idx;
 				}
 			}
 		}
-		std::cout << "max = "<< max << "\n";
+		//std::cout << "max = "<< max << "\n";
 		return argMax;
 	}
 
 	int TicTacToeSolver::FindBestActionAlphaBeta()
 	{
+		_time0 = std::chrono::high_resolution_clock::now();
 		int n = _state->GetSize();
-		int max = INT_MIN;
+		int score = INT32_MIN;
 		int argMax = -1;
-		int depth = 2;
-		if (_state->GetBranchFactor() < 25)
-			depth = 3;
-		if (_state->GetBranchFactor() < 20)
+		int depth = 3;
+		if (_state->GetBranchFactor() < 35)
 			depth = 4;
-		if (_state->GetBranchFactor() < 15)
+		if (_state->GetBranchFactor() < 23)
 			depth = 5;
-		if (_state->GetBranchFactor() < 10)
+		if (_state->GetBranchFactor() < 20)
+			depth = 6;
+		if (_state->GetBranchFactor() < 15)
 			depth = 7;
-		if (_state->GetBranchFactor() < 5)
+		if (_state->GetBranchFactor() < 10)
 			depth = 10;
 
+		int alpha = INT32_MIN;
+		int beta = INT32_MAX;
 		for (unsigned int idx = 0; idx < n * n * n; ++idx)
 		{
 			if (_state->IsBlank(idx))
 			{
 				int res = AlphaBeta(*_state, idx, false, depth);
-				if (res > max) {
-					max = res;
+				int tempScore = score;
+				score = std::max(score, AlphaBeta(*_state, idx, false, depth - 1, alpha, beta));
+				if (tempScore != score)
 					argMax = idx;
+				if (score >= beta)
+				{
+					return argMax;
 				}
+				alpha = std::max(alpha, score);
 			}
+
 		}
-		std::cout << "max = " << max << "\n";
 		return argMax;
 	}
 
@@ -516,6 +570,8 @@ namespace TicTacToe {
 	{
 		int prevLastFill = state.GetLastFill();
 		//char lastFill = state.Get(state.GetLastFill());
+		nodesExpanded++;
+
 		if(prevLastFill != -1)
 			state.Get(prevLastFill) == 'X' ? state.FillO(action) : state.FillX(action);
 		else
@@ -534,10 +590,11 @@ namespace TicTacToe {
 				std::cout << "\n";
 			}*/
 			state.Unfill(action, prevLastFill);
-			//return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
-			return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
+			//return isPlayerMax ? INT32_MIN + 1 : INT32_MAX - 1;
+			return isPlayerMax ? INT32_MIN + (state.GetSize() * state.GetSize()) - depth : INT32_MAX - (state.GetSize() * state.GetSize()) + depth;
 		}
 
+		auto time1 = std::chrono::high_resolution_clock::now();
 		if (depth < 0)
 		{
 			//state.Unfill(action, prevLastFill);
@@ -546,11 +603,16 @@ namespace TicTacToe {
 			state.Unfill(action, prevLastFill);
 			return isPlayerMax ? h2 - h1 : h1 - h2;
 		}
+		else if (std::chrono::duration_cast<std::chrono::seconds>(time1 - _time0).count() > 59) {
+
+
+			depth = 0;
+		}
 
 		unsigned int n = state.GetSize();
 		if (isPlayerMax)
 		{
-			int max = INT_MIN;
+			int max = INT32_MIN;
 			for (unsigned int idx = 0; idx < n * n * n; ++idx)
 			{
 				if (state.IsBlank(idx))
@@ -565,7 +627,7 @@ namespace TicTacToe {
 		}
 		else
 		{
-			int min = INT_MAX;
+			int min = INT32_MAX;
 			for (unsigned int idx = 0; idx < n * n * n; ++idx)
 			{
 				if (state.IsBlank(idx))
@@ -584,24 +646,32 @@ namespace TicTacToe {
 	{
 		int prevLastFill = state.GetLastFill();
 		
+		nodesExpanded++;
 
 		if (prevLastFill != -1)
 			state.Get(prevLastFill) == 'X' ? state.FillO(action) : state.FillX(action);
 		else
 			_isXTurn ? state.FillX(action) : state.FillO(action);
+		
 
 		if (IsTerminal(state))
 		{
 			state.Unfill(action, prevLastFill);
-			return isPlayerMax ? INT_MIN + 1 : INT_MAX - 1;
+			return isPlayerMax ? INT32_MIN + (state.GetSize() * state.GetSize()) - depth : INT32_MAX - (state.GetSize() * state.GetSize()) + depth;
 		}
 
+		auto time1 = std::chrono::high_resolution_clock::now();
 		if (depth < 0)
 		{
 			int h1 = HighetWinningPotentialHeuristic(state, _isXTurn);
 			int h2 = HighetWinningPotentialHeuristic(state, !_isXTurn);
 			state.Unfill(action, prevLastFill);
 			return isPlayerMax ? h2 - h1 : h1 - h2;
+		}
+		else if(std::chrono::duration_cast<std::chrono::seconds>(time1 - _time0).count() > 59) {
+			
+			
+			depth = 0;
 		}
 
 		unsigned int n = state.GetSize();
