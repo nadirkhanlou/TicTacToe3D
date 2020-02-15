@@ -11,13 +11,15 @@ using namespace TicTacToe;
 int main() {
     //char* c = "------O-----O-----O--------";
     //char* c = "-------O-----O-----O-------";
+    //char* c = "--O-------O-------O--------";
+    //char* c = "-----O-------O-------O-----";
     int size = 3;
     char* c = new char[size * size * size];
     for (int i = 0; i < size * size * size; ++i) {
         c[i] = '-';
     }
     std::cin >> c;
-    TicTacToeState s(c, size, 6);
+    TicTacToeState s(c, size, 2);
 
     TicTacToeSolver solver(s);
 

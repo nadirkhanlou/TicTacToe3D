@@ -235,6 +235,20 @@ namespace TicTacToe {
 			}
 		}
 
+		if (indx % size == (size - 1 - (indx / (size * size)))) {
+			if (isTerminal)
+				return true;
+			isTerminal = true;
+			counter = 0;
+			j = (indx % (size* size)) + (indx / (size * size));
+			for (j; j < size * size * size && counter < size; j += size * size - 1, counter++) {
+				if (state.Get(j) != lastFill) {
+					isTerminal = false;
+					break;
+				}
+			}
+		}
+
 		return isTerminal;
 	}
 
@@ -469,6 +483,21 @@ namespace TicTacToe {
 			j = size * size - (size - (indx % size));
 			path = std::vector<int>();
 			for (j; j < size * size * size && counter < size; j += size * size - size, counter++) {
+				if (state.Get(j) == opponentChar) {
+					opponentExists = true;
+				}
+				path.push_back(j);
+			}
+			if (!opponentExists)
+				potentialSet.emplace(path);
+		}
+
+		if (indx % size == (size - 1 - (indx / (size * size)))) {
+			opponentExists = false;
+			counter = 0;
+			j = (indx % (size * size)) + (indx / (size * size));
+			path = std::vector<int>();
+			for (j; j < size * size * size && counter < size; j += size * size - 1, counter++) {
 				if (state.Get(j) == opponentChar) {
 					opponentExists = true;
 				}
