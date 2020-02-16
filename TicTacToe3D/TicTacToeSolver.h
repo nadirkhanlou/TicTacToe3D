@@ -16,6 +16,7 @@ namespace TicTacToe {
 		State* _state;
 		bool _isXTurn;
 		std::chrono::steady_clock::time_point _time0;
+		int _timerLength;
 		
 		
 	public:
@@ -36,6 +37,7 @@ namespace TicTacToe {
 		int Minimax(State& state, int action, bool isPlayerMax, int depth = INT32_MAX, bool debugPar = false);
 		int AlphaBeta(State& state, int action, bool isPlayerMax, int alpha = INT32_MIN, int beta = INT32_MAX, int depth = INT32_MAX);
 		void SetTurn(bool isXTurn);
+		void SetTimer(int length);
 
 	}; // class TicTacToeSolver
 } // namespace TicTacToe

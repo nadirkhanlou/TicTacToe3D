@@ -18,6 +18,7 @@ namespace TicTacToe {
 	{
 		_state = &state;
 		_isXTurn = _state->Get(_state->GetLastFill()) == 'O' ? true : false;
+		_timerLength = INT32_MAX;
 		int size = state.GetSize();
 	}
 
@@ -561,17 +562,19 @@ namespace TicTacToe {
 		int n = _state->GetSize();
 		int score = INT32_MIN;
 		int argMax = -1;
-		int depth = 3;
+		int depth = 2;
 		if (_state->GetBranchFactor() < 35)
-			depth = 4;
+			depth = 3;
 		if (_state->GetBranchFactor() < 23)
-			depth = 5;
+			depth = 4;
 		if (_state->GetBranchFactor() < 20)
-			depth = 6;
+			depth = 5;
 		if (_state->GetBranchFactor() < 15)
-			depth = 7;
+			depth = 6;
 		if (_state->GetBranchFactor() < 10)
-			depth = 10;
+			depth = 7;
+		if (_state->GetBranchFactor() < 8)
+			depth = 8;
 
 		int alpha = INT32_MIN;
 		int beta = INT32_MAX;
@@ -632,7 +635,7 @@ namespace TicTacToe {
 			state.Unfill(action, prevLastFill);
 			return isPlayerMax ? h2 - h1 : h1 - h2;
 		}
-		else if (std::chrono::duration_cast<std::chrono::seconds>(time1 - _time0).count() > 59) {
+		else if (std::chrono::duration_cast<std::chrono::seconds>(time1 - _time0).count() > _timerLength - 1) {
 
 
 			depth = 0;
@@ -697,7 +700,7 @@ namespace TicTacToe {
 			state.Unfill(action, prevLastFill);
 			return isPlayerMax ? h2 - h1 : h1 - h2;
 		}
-		else if(std::chrono::duration_cast<std::chrono::seconds>(time1 - _time0).count() > 59) {
+		else if (std::chrono::duration_cast<std::chrono::seconds>(time1 - _time0).count() > _timerLength - 1) {
 			
 			
 			depth = 0;
@@ -747,6 +750,11 @@ namespace TicTacToe {
 	void TicTacToeSolver::SetTurn(bool isXTurn)
 	{
 		_isXTurn = isXTurn;
+	}
+
+	void TicTacToeSolver::SetTimer(int length)
+	{
+		_timerLength = length;
 	}
 	
 } //namespace TicTacToe

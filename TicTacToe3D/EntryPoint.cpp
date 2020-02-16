@@ -123,18 +123,20 @@ int main1() {
 extern "C" __declspec(dllexport) bool test(char gameBoard[]) {
     return gameBoard[0] == '-';
 }
-extern "C" __declspec(dllexport) int GetBestMoveMinimax(char* gameBoard, int gameSize, int lastFill)
+extern "C" __declspec(dllexport) int GetBestMoveMinimax(char* gameBoard, int gameSize, int lastFill, int length)
 {
     TicTacToeState state(gameBoard, gameSize, lastFill);
     TicTacToeSolver solver(state);
     solver.SetTurn(state.GetLastFill() != 'X');
+    solver.SetTimer(length);
     return solver.FindBestActionMinimax();
 }
-extern "C" __declspec(dllexport) int GetBestMoveAlphaBeta(char* gameBoard, int gameSize, int lastFill)
+extern "C" __declspec(dllexport) int GetBestMoveAlphaBeta(char* gameBoard, int gameSize, int lastFill, int length)
 {
     TicTacToeState state(gameBoard, gameSize, lastFill);
     TicTacToeSolver solver(state);
     solver.SetTurn(state.GetLastFill() != 'X');
+    solver.SetTimer(length);
     return solver.FindBestActionAlphaBeta();
 }
 extern "C" __declspec(dllexport) bool IsTerminal(char* gameBoard, int gameSize, int lastFill)
