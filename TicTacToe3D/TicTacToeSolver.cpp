@@ -191,7 +191,7 @@ namespace TicTacToe {
 			}
 		}
 
-		if (indx / (size * size) == size - (indx % size) - 1 && indx % size == (indx % (size * size)) / size) {
+		if (indx / (size * size) == (indx % size) && size - (indx / (size * size) == (indx % (size * size)) / size) - 1) {
 			if (isTerminal)
 				return true;
 			//std::cout << "11\n";
@@ -224,7 +224,7 @@ namespace TicTacToe {
 		if ((size - 1 - (indx / (size * size))) == (indx % (size * size)) / size) {
 			if (isTerminal)
 				return true;
-			//std::cout << "12\n";
+			//std::cout << "13\n";
 			isTerminal = true;
 			counter = 0;
 			j = size * size - (size - (indx % size));
